@@ -1,5 +1,5 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import {ApplicationConfig, createBindingFromClass} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -9,8 +9,11 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-
+import {LoggingBindings} from '@loopback/logging';
+import {asCronJob, CronComponent, CronJob} from '@loopback/cron';
+import {IqairParisCron} from './crons';
 export {ApplicationConfig};
+
 
 export class AirQualityApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -28,7 +31,14 @@ export class AirQualityApplication extends BootMixin(
     this.configure(RestExplorerBindings.COMPONENT).to({
       path: '/explorer',
     });
+    this.configure(LoggingBindings.COMPONENT).to({
+      enableFluent: false, // default to true
+      enableHttpAccessLog: true, // default to true
+    });
     this.component(RestExplorerComponent);
+
+    this.component(CronComponent);
+    this.add(createBindingFromClass(IqairParisCron))
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here

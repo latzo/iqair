@@ -16,13 +16,23 @@ const config = {
     {
       template: {
         method: 'GET',
-        url: 'https://api.airvisual.com/v2/nearest_city?{lat}&lon={lon}&key={apiKey}',
+        url: 'https://api.airvisual.com/v2/nearest_city?lat={lat}&lon={lon}&key={apiKey}',
       },
       functions: {
-        getNearestCityAirQuality: ['lat','lon','apiKey'],
+        getNearestCityAirQualityWithLatAndLong: ['lat','lon','apiKey'],
       },
     },
+    {
+      template: {
+        method: 'GET',
+        url: 'https://api.airvisual.com/v2/nearest_city?key={apiKey}',
+      },
+      functions: {
+        getNearestCityAirQuality: ['apiKey'],
+      },
+    }
   ],
+
 };
 
 // Observe application's life cycle to disconnect the datasource when
